@@ -19,19 +19,19 @@ message_form.addEventListener('submit', (e) => {
     message_input.value = '';
     add_message(create_message(message));
 
-    socket.emit('send-message', message, room);
+    socket.emit('send-message', user, message, room);
 })
 
 const create_message = message => {
     const div = document.createElement('div');
-    div.innerHTML = message;
+    div.innerHTML = `You : ${message}`;
     div.classList.add('single-message');
     return div;
 }
 
-const create_other_message = message => {
+const create_other_message = (user, message) => {
     const div = document.createElement('div');
-    div.innerHTML = message;
+    div.innerHTML = `${user} : ${message}`;
     div.classList.add('single-message');
     return div;
 }
@@ -54,8 +54,8 @@ const add_other_message = msgdiv => {
     scroll_to_bottom();
 }
 
-socket.on('send-to-other', (message) => {
-    add_other_message(create_other_message(message));
+socket.on('send-to-other', (user, message) => {
+    add_other_message(create_other_message(user, message));
 })
 
 socket.on('user-joined', user => {
