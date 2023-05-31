@@ -9,6 +9,7 @@ let room_name_input = document.getElementById('room-name');
 let user_name_input = document.getElementById('user-name');
 let user_greeting_div = document.getElementById('user-greeting');
 let leave_btn = document.getElementById('leave-btn');
+let user_list = document.getElementById('user_list');
 let room = user = '';
 
 message_form.addEventListener('submit', (e) => {
@@ -58,20 +59,34 @@ socket.on('send-to-other', (user, message) => {
     add_other_message(create_other_message(user, message));
 })
 
-socket.on('user-joined', user => {
+socket.on('user-joined', (user) => {
     display_joined(`${user} has joined to this room`);
+    scroll_to_bottom();
+})
+
+socket.on('update-user-list', (users) => {
+    update_user_list(users);
 })
 
 socket.on('user-left', user => {
     display_joined(`${user} has left this room`);
+    scroll_to_bottom();
 })
+
+
 
 room_name_form.addEventListener('submit', e => {
     e.preventDefault();
     room = room_name_input.value;
     user = user_name_input.value;
 
-    socket.emit('join-room', room, user, (message) => {
+    socket.emit('join-room', room, user, ({message, error}) => {
+        if(error){
+            alert(error);
+            return false;
+        }
+        console.log(error);
+        console.log(message);
         display_joined(message);
         toggle_view();
         greet_user();
@@ -106,3 +121,15 @@ leave_btn.addEventListener('click', (e) => {
         location.reload();
     })
 })
+
+
+const update_user_list = clients => {
+    if(clients.length > 0){
+        user_list.innerHTML = '';
+        clients.forEach(client => {
+            const liUser = document.createElement('li');
+            liUser.innerHTML = client;
+            user_list.appendChild(liUser);
+        });
+    }
+}

@@ -35,24 +35,35 @@
         </div>
     </div>
 
-    <div class="container" id="chat-window" style="display: none;">
-        <div class="d-flex">
-            <div class="d-block w-50">
-                <h3 class="text-bg-secondary" id="user-greeting">Messages</h3>
+    <div class="container-fluid" id="chat-window" style="display: none;">
+        <div class="row">
+            <div class="col-3">
+                <div class="list-group">
+                    <h5 class="text-primary">All Users<hr></h5>
+                    <ul id="user_list">
+                    </ul>
+                </div>
             </div>
-            <div class="d-block text-end w-50">
-                <button class="btn btn-primary mt-3 float-right" id="leave-btn">Leave Room</button>
+            <div class="col-9">
+                <div class="d-flex">
+                    <div class="d-block w-50">
+                        <h3 class="text-bg-secondary" id="user-greeting">Messages</h3>
+                    </div>
+                    <div class="d-block text-end w-50">
+                        <button class="btn btn-primary mt-3 float-right" id="leave-btn">Leave Room</button>
+                    </div>
+                </div>
+                <div id="messages"></div>
+                <form id="message-form" class="py-4" autocomplete="off">
+                    <div class="d-flex">
+                        <input type="text" class="form-control shadow-none" id="message-input" placeholder="Type a message..." autocomplete="off">
+                        <button class="btn btn-default form-control-btn" type="submit">
+                            <img src="send.svg" class="send-icon">
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div id="messages"></div>
-        <form id="message-form" class="py-4" autocomplete="off">
-            <div class="d-flex">
-                <input type="text" class="form-control shadow-none" id="message-input" placeholder="Type a message..." autocomplete="off">
-                <button class="btn btn-default form-control-btn" type="submit">
-                    <img src="send.svg" class="send-icon">
-                </button>
-            </div>
-        </form>
     </div>
     <script src="https://chat-server-xy1s.onrender.com/socket.io/socket.io.js"></script>
     <script src="app.js"></script>
