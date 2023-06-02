@@ -1,4 +1,4 @@
-const socket = io.connect('https://chat-server-xy1s.onrender.com');
+const socket = io.connect('https://chat-server-xy1s.onrender.com/chat');
 
 let content = document.getElementById('messages');
 let message_form = document.getElementById('message-form');
@@ -10,6 +10,7 @@ let user_name_input = document.getElementById('user-name');
 let user_greeting_div = document.getElementById('user-greeting');
 let leave_btn = document.getElementById('leave-btn');
 let user_list = document.getElementById('user_list');
+let sidebar = document.getElementById('sidebar');
 let room = user = '';
 
 message_form.addEventListener('submit', (e) => {
@@ -56,6 +57,7 @@ const add_other_message = msgdiv => {
 }
 
 socket.on('send-to-other', (user, message) => {
+    $(`.${user}-typing`).remove();
     add_other_message(create_other_message(user, message));
 })
 
@@ -131,5 +133,43 @@ const update_user_list = clients => {
             liUser.innerHTML = client;
             user_list.appendChild(liUser);
         });
+    }
+}
+
+$(document).on('input', '#message-input', function(){
+    socket.emit('user-typing', user, room);
+})
+
+socket.on('user-typing-show', (user) => {
+    display_user_typing(user);
+})
+
+const display_user_typing = (user) => {
+    $(`.${user}-typing`).remove();
+
+    const div = document.createElement('div');
+    div.innerHTML = `<img src='typing.gif' class='typing-gif'> ${user} is typing`;
+    div.classList.add('single-message');
+    
+
+    let msgcont = document.createElement('div');
+    msgcont.appendChild(div);
+    msgcont.classList.add('d-flex');
+    msgcont.classList.add('justify-content-start');
+    msgcont.classList.add(`${user}-typing`);
+    content.appendChild(msgcont);
+    scroll_to_bottom();
+} 
+
+$(document).on('click', '.sidebar-icon', () => {
+    toggle_sidebar();
+})
+
+const toggle_sidebar = () => {
+    if(sidebar.style.display === 'none'){
+        $('#sidebar').show("slide", {direction: "left" }, 500);
+    }
+    else{
+        $('#sidebar').hide("slide", {direction: "left" }, 500);
     }
 }
